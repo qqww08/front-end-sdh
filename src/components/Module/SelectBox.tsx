@@ -67,9 +67,9 @@ const SelectBox = ({ sizes, options }: Props) => {
         },
       };
     },
-    placeholder: (defaultStyles, state) => {
+    placeholder: (provided, state) => {
       return {
-        ...defaultStyles,
+        ...provided,
         color: state.isDisabled && `${themes.selectBox.disabledColor}`,
       };
     },
@@ -84,25 +84,22 @@ const SelectBox = ({ sizes, options }: Props) => {
   return (
     <__Wrapper>
       <Select
-        placeholder={`${sizes} Select`}
+        placeholder={`${sizes[0].toUpperCase()}${sizes.slice(1, sizes.length)} Select`}
         options={options}
         value={data}
         onChange={selectHandler}
         styles={customStyles}
         isDisabled={options.length === 0}
         ref={selectRef}
+        components={{
+          IndicatorSeparator: () => null,
+        }}
       />
     </__Wrapper>
   );
 };
 
 const __Wrapper = styled.div`
-  .css-1okebmr-indicatorSeparator {
-    display: none;
-  }
-  .css-1wa3eu0-placeholder {
-    text-transform: capitalize;
-  }
   input {
     color: transparent !important;
     text-shadow: 0 0 0 black !important;

@@ -8,6 +8,7 @@ const options = [
   { value: "인더웨어", label: "인더웨어" },
   { value: "프론트엔드 엔지니어", label: "프론트엔드 엔지니어" },
 ];
+
 const MainPage = () => {
   return (
     <__Wrapper>
