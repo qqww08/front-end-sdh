@@ -1,47 +1,76 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
-import SelectTypes from "../../utils/select-types";
+import themes from "../../styles/themes";
+import SelectSizes from "../../utils/select-sizes";
 type Option = {
   value: string;
   label: string;
 };
 interface Props {
-  type: string;
   sizes: string;
-  options: Option[];
+  options?: Option[];
 }
-const SelectBox = ({ type, sizes, options }: Props) => {
+const SelectBox = ({ sizes, options }: Props) => {
   const [data, setData] = useState<string>("");
+  const selectRef = useRef(null);
+  // select 선택 후
   const selectHandler = (selected) => {
     setData(selected);
+    selectRef.current.select.blur();
   };
+  // react-select styles 커스텀
   const customStyles = {
+    // select 옵션
     option: (provided, state) => {
-      console.log(state);
-      console.log(provided);
+      // console.log(state);
+      // console.log(provided);
       return {
         ...provided,
-        opacity: 0.8,
-        padding: 20,
-        color: state.isSelected
-          ? `${SelectTypes.select(type).color}`
-          : `${SelectTypes.value(type).color}`,
-        backgroundColor: state.isSelected
-          ? `${SelectTypes.select(type).back}`
-          : `${SelectTypes.value(type).back}`,
+        width: 300,
+        padding: Number(`${SelectSizes.padding(sizes)}`),
+        fontSize: Number(`${SelectSizes.font(sizes)}`),
+        color: state.isDisabled
+          ? `${themes.selectBox.disabledValueC}`
+          : state.isSelected
+          ? `${themes.selectBox.selectDefaultValueC}`
+          : `${themes.selectBox.defaultValueC}`,
+        backgroundColor: state.isDisabled
+          ? `${themes.selectBox.disabledValueB}`
+          : state.isSelected
+          ? `${themes.selectBox.selectDefaultValueB}`
+          : `${themes.selectBox.defaultValueB}`,
         "&:hover": {
-          backgroundColor: `${SelectTypes.select(type).back}`,
+          backgroundColor: state.isDisabled
+            ? `${themes.selectBox.disabledValueB}`
+            : state.isSelected
+            ? `${themes.selectBox.selectHoverValueB}`
+            : `${themes.selectBox.hoverValueB}`,
         },
       };
     },
-    control: (provided) => {
-      console.log(provided);
+    //select
+    control: (provided, state) => {
+      // console.log(state);
+      // console.log(provided);
       return {
         ...provided,
-        width: 200,
-        border: `1px solid ${SelectTypes.input(type).border}`,
-        backgroundColor: `${SelectTypes.input(type).back}`,
+        width: 300,
+        height: Number(`${SelectSizes.height(sizes)}`),
+        fontSize: Number(`${SelectSizes.font(sizes)}`),
+        backgroundColor: state.isDisabled && `${themes.selectBox.disabledBack}`,
+        border: state.isFocused
+          ? `1px solid ${themes.selectBox.focusedBorder}`
+          : `1px solid ${themes.selectBox.defaultBorder}`,
+        "&:hover": {
+          border: `1px solid ${themes.selectBox.hoverBorder}`,
+        },
+      };
+    },
+    placeholder: (defaultStyles, state) => {
+      return {
+        ...defaultStyles,
+        color: state.isDisabled && `${themes.selectBox.disabledColor}`,
       };
     },
     singleValue: (provided, state) => {
@@ -54,11 +83,29 @@ const SelectBox = ({ type, sizes, options }: Props) => {
 
   return (
     <__Wrapper>
-      <Select options={options} value={data} onChange={selectHandler} styles={customStyles} />
+      <Select
+        placeholder={`${sizes} Select`}
+        options={options}
+        value={data}
+        onChange={selectHandler}
+        styles={customStyles}
+        isDisabled={options.length === 0}
+        ref={selectRef}
+      />
     </__Wrapper>
   );
 };
+
 const __Wrapper = styled.div`
-  width: 200px;
+  .css-1okebmr-indicatorSeparator {
+    display: none;
+  }
+  .css-1wa3eu0-placeholder {
+    text-transform: capitalize;
+  }
+  input {
+    color: transparent !important;
+    text-shadow: 0 0 0 black !important;
+  }
 `;
 export default SelectBox;
