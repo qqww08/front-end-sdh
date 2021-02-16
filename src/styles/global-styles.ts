@@ -19,16 +19,7 @@ const GlobalStyle = createGlobalStyle`
     outline: none;
   }
   h1, h2, h3, h4, h5, h6{
-    font-family:'Maven Pro', sans-serif;
-  }
-  /* 웹앱으로 안에 들어갈시 필수로 넣어야함 */
-  select,input {
-    border-style:none;
-    background-color:transparent;
-    border-radius: 0;
-    appearance:none;
-    -moz-appearance:none;
-   -webkit-appearance:none;
+      font-family:'Maven Pro', sans-serif;
   }
  
 `;
